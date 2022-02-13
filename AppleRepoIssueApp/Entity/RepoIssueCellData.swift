@@ -12,4 +12,5 @@ struct RepoIssueCellData {
     let author: String
     let url: URL?
     let profileImageURL: URL?
+    var number: Int?
 }

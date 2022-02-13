@@ -12,7 +12,7 @@ class RepoTableViewCell: UITableViewCell {
     static let identifier = "RepoTableViewCell"
     
     let titleLabel = UILabel()
-    
+
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         setupAttribute()
@@ -24,13 +24,15 @@ class RepoTableViewCell: UITableViewCell {
     }
         
     // DataFlow: vc -> tv -> cell
-    public func setupData() {
-        
+    public func setupData(_ data: RepoIssueCellData) {
+        self.titleLabel.text = "\(data.number ?? 4167) - " + data.title
     }
     
     private func setupAttribute() {
         titleLabel.font = .systemFont(ofSize: 14, weight: .regular)
         titleLabel.textColor = .black
+        selectionStyle = .none
+        accessoryType = .disclosureIndicator
     }
     
     private func setupLayout() {

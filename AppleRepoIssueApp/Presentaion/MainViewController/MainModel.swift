@@ -15,6 +15,7 @@ struct MainModel {
     let network = RepositoryIssueNetork()
     
     func searchIssueInRepo(_ query: String) -> Single< Result<[RepoIssue], RepositoryIssueNetorkError>> {
+        print("DEBUG: TextField입력값", query)
         return network.searchIssue(query: query)
     }
     
@@ -40,7 +41,8 @@ struct MainModel {
                 title: response.title ?? "",
                 author: response.user?.username ?? "",
                 url: issueURL,
-                profileImageURL: imageURL)
+                profileImageURL: imageURL,
+                number: response.number)
         }
     }
 }

@@ -10,12 +10,12 @@ import Foundation
 struct RepoIssue: Decodable {
     var url: String?
     var title: String?
-    var id: Int?
+    var number: Int?
     var issueContent: String?
     var user: User?
     
     enum CodingKeys: String, CodingKey {
-        case title, id, user
+        case title, number, user
         case url = "html_url"
         case issueContent = "body"
     }

@@ -35,14 +35,17 @@ class MainViewController: UIViewController {
     }
     
     public func bind(_ viewModel: MainViewModel) {
-        
+        repoTableView.bind(viewModel.repoTableViewModel)
+
         searchButton.rx.tap
             .bind(to: viewModel.searchButtonTapped)
             .disposed(by: disposeBag)
         
-//        viewModel.presentSearchAlert
-//            .emit(to: self.rx.setAlert)
-//            .disposed(by: disposeBag)
+        viewModel.alertTextFieldText
+            .asDriver(onErrorDriveWith: .empty())
+            .drive(self.rx.title)
+            .disposed(by: disposeBag)
+        
         viewModel.presentSearchAlert
             .drive(onNext: {
                 let alertController = UIAlertController(
@@ -54,6 +57,7 @@ class MainViewController: UIViewController {
                         .bind(to: viewModel.alertTextFieldText)
                         .disposed(by: self.disposeBag)
                 }
+
                 let action = UIAlertAction(
                     title: "확인",
                     style: .cancel){ action in
@@ -67,8 +71,17 @@ class MainViewController: UIViewController {
             })
             .disposed(by: disposeBag)
         
+        repoTableView.rx.itemSelected
+            .map { $0.row }
+            .bind(to: viewModel.itemSelected)
+            .disposed(by: disposeBag)
         
-        
+        viewModel.push
+            .drive(onNext: { viewModel in
+                let detailViewController = DetailViewController()
+                self.show(detailViewController, sender: nil)
+            })
+            .disposed(by: disposeBag)
     }
     
     private func setupNavigation() {
@@ -87,24 +100,3 @@ class MainViewController: UIViewController {
         }
     }
 }
-
-//typealias Alert = (title: String, message: String?)
-//extension Reactive where Base: MainViewController {
-//    var setAlert: Binder<String> {
-//        return Binder(base) { base, data in
-//            let alertController = UIAlertController(
-//                title: data,
-//                message: "원하시는 Repository를 입력해주세요.",
-//                preferredStyle: .alert)
-//            let action = UIAlertAction(
-//                title: "확인",
-//                style: .cancel,
-//                handler: nil)
-//            alertController.addTextField { _ in }
-//            alertController.addAction(action)
-//            alertController.textFields[0].rx.text
-//                .bind(to: <#T##String?...##String?#>)
-//            base.present(alertController, animated: true)
-//        }
-//    }
-//}
